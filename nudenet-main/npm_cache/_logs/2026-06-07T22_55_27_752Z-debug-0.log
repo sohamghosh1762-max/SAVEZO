@@ -1,0 +1,162 @@
+0 verbose cli /usr/local/bin/node /usr/local/bin/npm
+1 info using npm@10.9.3
+2 info using node@v22.20.0
+3 silly config load:file:/usr/local/lib/node_modules/npm/npmrc
+4 silly config load:file:/Users/bipasasaha/Desktop/SAVEZO/nudenet-main/.npmrc
+5 silly config load:file:/Users/bipasasaha/.npmrc
+6 silly config load:file:/usr/local/etc/npmrc
+7 verbose title npm install
+8 verbose argv "install" "--cache" "./npm_cache"
+9 verbose logfile logs-max:10 dir:/Users/bipasasaha/Desktop/SAVEZO/nudenet-main/npm_cache/_logs/2026-06-07T22_55_27_752Z-
+10 verbose logfile /Users/bipasasaha/Desktop/SAVEZO/nudenet-main/npm_cache/_logs/2026-06-07T22_55_27_752Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4345298944 maxSize:1086324736 maxEntrySize:543162368
+13 silly idealTree buildDeps
+14 silly fetch manifest @tensorflow/tfjs@^4.5.0
+15 silly packumentCache full:https://registry.npmjs.org/@tensorflow%2ftfjs cache-miss
+16 http fetch GET 200 https://registry.npmjs.org/npm 621ms
+17 http fetch GET 200 https://registry.npmjs.org/@tensorflow%2ftfjs 1146ms (cache miss)
+18 silly packumentCache full:https://registry.npmjs.org/@tensorflow%2ftfjs set size:undefined disposed:false
+19 silly fetch manifest argparse@^2.0.1
+20 silly packumentCache full:https://registry.npmjs.org/argparse cache-miss
+21 http fetch GET 200 https://registry.npmjs.org/argparse 171ms (cache miss)
+22 silly packumentCache full:https://registry.npmjs.org/argparse set size:undefined disposed:false
+23 silly fetch manifest @html-eslint/eslint-plugin@^0.18.0
+24 silly packumentCache full:https://registry.npmjs.org/@html-eslint%2feslint-plugin cache-miss
+25 http fetch GET 200 https://registry.npmjs.org/@html-eslint%2feslint-plugin 730ms (cache miss)
+26 silly packumentCache full:https://registry.npmjs.org/@html-eslint%2feslint-plugin set size:undefined disposed:false
+27 silly fetch manifest @html-eslint/parser@^0.18.0
+28 silly packumentCache full:https://registry.npmjs.org/@html-eslint%2fparser cache-miss
+29 http fetch GET 200 https://registry.npmjs.org/@html-eslint%2fparser 698ms (cache miss)
+30 silly packumentCache full:https://registry.npmjs.org/@html-eslint%2fparser set size:undefined disposed:false
+31 silly fetch manifest @tensorflow/tfjs-backend-webgl@^4.5.0
+32 silly packumentCache full:https://registry.npmjs.org/@tensorflow%2ftfjs-backend-webgl cache-miss
+33 http fetch GET 200 https://registry.npmjs.org/@tensorflow%2ftfjs-backend-webgl 807ms (cache miss)
+34 silly packumentCache full:https://registry.npmjs.org/@tensorflow%2ftfjs-backend-webgl set size:undefined disposed:false
+35 silly fetch manifest @tensorflow/tfjs-core@4.22.0
+36 silly packumentCache full:https://registry.npmjs.org/@tensorflow%2ftfjs-core cache-miss
+37 http fetch GET 200 https://registry.npmjs.org/@tensorflow%2ftfjs-core 774ms (cache miss)
+38 silly packumentCache full:https://registry.npmjs.org/@tensorflow%2ftfjs-core set size:undefined disposed:false
+39 silly fetch manifest @tensorflow/tfjs-backend-webgpu@0.0.1-alpha.20
+40 silly packumentCache full:https://registry.npmjs.org/@tensorflow%2ftfjs-backend-webgpu cache-miss
+41 http fetch GET 200 https://registry.npmjs.org/@tensorflow%2ftfjs-backend-webgpu 736ms (cache miss)
+42 silly packumentCache full:https://registry.npmjs.org/@tensorflow%2ftfjs-backend-webgpu set size:undefined disposed:false
+43 silly fetch manifest @tensorflow/tfjs-core@4.5.0
+44 silly packumentCache full:https://registry.npmjs.org/@tensorflow%2ftfjs-core cache-miss
+45 http cache https://registry.npmjs.org/@tensorflow%2ftfjs-core 7ms (cache hit)
+46 silly packumentCache full:https://registry.npmjs.org/@tensorflow%2ftfjs-core set size:856686 disposed:false
+47 silly fetch manifest @tensorflow/tfjs-node@^4.20.0
+48 silly packumentCache full:https://registry.npmjs.org/@tensorflow%2ftfjs-node cache-miss
+49 http fetch GET 200 https://registry.npmjs.org/@tensorflow%2ftfjs-node 831ms (cache miss)
+50 silly packumentCache full:https://registry.npmjs.org/@tensorflow%2ftfjs-node set size:undefined disposed:false
+51 silly fetch manifest @vladmandic/build@^0.9.2
+52 silly packumentCache full:https://registry.npmjs.org/@vladmandic%2fbuild cache-miss
+53 http fetch GET 200 https://registry.npmjs.org/@vladmandic%2fbuild 824ms (cache miss)
+54 silly packumentCache full:https://registry.npmjs.org/@vladmandic%2fbuild set size:undefined disposed:false
+55 silly fetch manifest @vladmandic/pilogger@^0.4.6
+56 silly packumentCache full:https://registry.npmjs.org/@vladmandic%2fpilogger cache-miss
+57 http fetch GET 200 https://registry.npmjs.org/@vladmandic%2fpilogger 799ms (cache miss)
+58 silly packumentCache full:https://registry.npmjs.org/@vladmandic%2fpilogger set size:undefined disposed:false
+59 silly fetch manifest canvas@^2.11.2
+60 silly packumentCache full:https://registry.npmjs.org/canvas cache-miss
+61 http fetch GET 200 https://registry.npmjs.org/canvas 161ms (cache miss)
+62 silly packumentCache full:https://registry.npmjs.org/canvas set size:undefined disposed:false
+63 silly fetch manifest eslint@^8.40.0
+64 silly packumentCache full:https://registry.npmjs.org/eslint cache-miss
+65 http fetch GET 200 https://registry.npmjs.org/eslint 202ms (cache miss)
+66 silly packumentCache full:https://registry.npmjs.org/eslint set size:undefined disposed:false
+67 silly fetch manifest eslint-config-airbnb-base@^15.0.0
+68 silly packumentCache full:https://registry.npmjs.org/eslint-config-airbnb-base cache-miss
+69 http fetch GET 200 https://registry.npmjs.org/eslint-config-airbnb-base 355ms (cache miss)
+70 silly packumentCache full:https://registry.npmjs.org/eslint-config-airbnb-base set size:undefined disposed:false
+71 silly fetch manifest eslint-plugin-import@^2.27.5
+72 silly packumentCache full:https://registry.npmjs.org/eslint-plugin-import cache-miss
+73 http fetch GET 200 https://registry.npmjs.org/eslint-plugin-import 354ms (cache miss)
+74 silly packumentCache full:https://registry.npmjs.org/eslint-plugin-import set size:undefined disposed:false
+75 silly fetch manifest eslint-plugin-html@^7.1.0
+76 silly packumentCache full:https://registry.npmjs.org/eslint-plugin-html cache-miss
+77 http fetch GET 200 https://registry.npmjs.org/eslint-plugin-html 357ms (cache miss)
+78 silly packumentCache full:https://registry.npmjs.org/eslint-plugin-html set size:undefined disposed:false
+79 silly fetch manifest eslint-plugin-json@^3.1.0
+80 silly packumentCache full:https://registry.npmjs.org/eslint-plugin-json cache-miss
+81 http fetch GET 200 https://registry.npmjs.org/eslint-plugin-json 336ms (cache miss)
+82 silly packumentCache full:https://registry.npmjs.org/eslint-plugin-json set size:undefined disposed:false
+83 silly fetch manifest eslint-plugin-node@^11.1.0
+84 silly packumentCache full:https://registry.npmjs.org/eslint-plugin-node cache-miss
+85 http fetch GET 200 https://registry.npmjs.org/eslint-plugin-node 130ms (cache miss)
+86 silly packumentCache full:https://registry.npmjs.org/eslint-plugin-node set size:undefined disposed:false
+87 silly fetch manifest eslint-plugin-promise@^6.1.1
+88 silly packumentCache full:https://registry.npmjs.org/eslint-plugin-promise cache-miss
+89 http fetch GET 200 https://registry.npmjs.org/eslint-plugin-promise 391ms (cache miss)
+90 silly packumentCache full:https://registry.npmjs.org/eslint-plugin-promise set size:undefined disposed:false
+91 silly fetch manifest long@^5.2.3
+92 silly packumentCache full:https://registry.npmjs.org/long cache-miss
+93 http fetch GET 200 https://registry.npmjs.org/long 366ms (cache miss)
+94 silly packumentCache full:https://registry.npmjs.org/long set size:undefined disposed:false
+95 silly fetch manifest pipe2jpeg@^0.4.1
+96 silly packumentCache full:https://registry.npmjs.org/pipe2jpeg cache-miss
+97 http fetch GET 200 https://registry.npmjs.org/pipe2jpeg 326ms (cache miss)
+98 silly packumentCache full:https://registry.npmjs.org/pipe2jpeg set size:undefined disposed:false
+99 silly placeDep ROOT @html-eslint/eslint-plugin@0.18.0 OK for: nudenet@0.3.0 want: ^0.18.0
+100 silly placeDep ROOT @html-eslint/parser@0.18.0 OK for: nudenet@0.3.0 want: ^0.18.0
+101 silly placeDep ROOT @tensorflow/tfjs@4.22.0 OK for: nudenet@0.3.0 want: ^4.5.0
+102 silly placeDep ROOT @tensorflow/tfjs-backend-webgl@4.22.0 OK for: nudenet@0.3.0 want: ^4.5.0
+103 silly placeDep ROOT @tensorflow/tfjs-core@4.22.0 OK for: @tensorflow/tfjs-backend-webgl@4.22.0 want: 4.22.0
+104 verbose stack Error: could not resolve
+104 verbose stack     at PlaceDep.failPeerConflict (/usr/local/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/place-dep.js:503:25)
+104 verbose stack     at new PlaceDep (/usr/local/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/place-dep.js:157:21)
+104 verbose stack     at #buildDepStep (/usr/local/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/build-ideal-tree.js:920:18)
+104 verbose stack     at async Arborist.buildIdealTree (/usr/local/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/build-ideal-tree.js:181:7)
+104 verbose stack     at async Promise.all (index 1)
+104 verbose stack     at async Arborist.reify (/usr/local/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:131:5)
+104 verbose stack     at async Install.exec (/usr/local/lib/node_modules/npm/lib/commands/install.js:150:5)
+104 verbose stack     at async Npm.exec (/usr/local/lib/node_modules/npm/lib/npm.js:207:9)
+104 verbose stack     at async module.exports (/usr/local/lib/node_modules/npm/lib/cli/entry.js:74:5)
+105 error code ERESOLVE
+106 error ERESOLVE could not resolve
+107 error
+108 error While resolving: nudenet@0.3.0
+108 error Found: @tensorflow/tfjs-core@4.22.0
+108 error node_modules/@tensorflow/tfjs-core
+108 error   @tensorflow/tfjs-core@"4.22.0" from @tensorflow/tfjs@4.22.0
+108 error   node_modules/@tensorflow/tfjs
+108 error     @tensorflow/tfjs@"^4.5.0" from the root project
+108 error   peer @tensorflow/tfjs-core@"4.22.0" from @tensorflow/tfjs-backend-webgl@4.22.0
+108 error   node_modules/@tensorflow/tfjs-backend-webgl
+108 error     dev @tensorflow/tfjs-backend-webgl@"^4.5.0" from the root project
+108 error     @tensorflow/tfjs-backend-webgl@"4.22.0" from @tensorflow/tfjs@4.22.0
+108 error     node_modules/@tensorflow/tfjs
+108 error       @tensorflow/tfjs@"^4.5.0" from the root project
+108 error
+108 error Could not resolve dependency:
+108 error dev @tensorflow/tfjs-backend-webgpu@"0.0.1-alpha.20" from the root project
+108 error
+108 error Conflicting peer dependency: @tensorflow/tfjs-core@4.5.0
+108 error node_modules/@tensorflow/tfjs-core
+108 error   peer @tensorflow/tfjs-core@"4.5.0" from @tensorflow/tfjs-backend-webgpu@0.0.1-alpha.20
+108 error   node_modules/@tensorflow/tfjs-backend-webgpu
+108 error     dev @tensorflow/tfjs-backend-webgpu@"0.0.1-alpha.20" from the root project
+108 error
+108 error Fix the upstream dependency conflict, or retry
+108 error this command with --force or --legacy-peer-deps
+108 error to accept an incorrect (and potentially broken) dependency resolution.
+109 error
+109 error
+109 error For a full report see:
+109 error /Users/bipasasaha/Desktop/SAVEZO/nudenet-main/npm_cache/_logs/2026-06-07T22_55_27_752Z-eresolve-report.txt
+110 silly unfinished npm timer reify 1780872927843
+111 silly unfinished npm timer reify:loadTrees 1780872927843
+112 silly unfinished npm timer idealTree:buildDeps 1780872927847
+113 silly unfinished npm timer idealTree:#root 1780872927847
+114 verbose cwd /Users/bipasasaha/Desktop/SAVEZO/nudenet-main
+115 verbose os Darwin 25.5.0
+116 verbose node v22.20.0
+117 verbose npm  v10.9.3
+118 notice
+118 notice New major version of npm available! 10.9.3 -> 11.16.0
+118 notice Changelog: https://github.com/npm/cli/releases/tag/v11.16.0
+118 notice To update run: npm install -g npm@11.16.0
+118 notice  { force: true, [Symbol(proc-log.meta)]: true }
+119 verbose exit 1
+120 verbose code 1
+121 error A complete log of this run can be found in: /Users/bipasasaha/Desktop/SAVEZO/nudenet-main/npm_cache/_logs/2026-06-07T22_55_27_752Z-debug-0.log

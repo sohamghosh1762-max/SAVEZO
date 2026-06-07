@@ -5,8 +5,8 @@ import { CTA } from "@/components/landing/CTA"
 
 export default function Landing() {
   return (
-    <main className="pt-[68px] bg-background text-foreground transition-colors duration-300">
-
+    <main className="relative pt-[68px] bg-background text-foreground transition-colors duration-300 overflow-hidden">
+      
       {/* 🌟 HERO */}
       <Hero />
 

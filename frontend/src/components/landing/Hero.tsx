@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { motion } from "framer-motion"
+import { FloatingBubbles } from "./FloatingBubbles"
 
 export function Hero() {
   const router = useRouter()
@@ -38,31 +39,54 @@ export function Hero() {
         }}
       />
 
-      {/* Content */}
-      <div className="relative z-10 max-w-4xl">
+      {/* Floating 3D Likes, Hearts, Comments & Shares backdrop restricted to Hero section */}
+      <FloatingBubbles height="h-full" />
+
+      {/* Content (elevated to z-20 to float cleanly over bubbles and keep buttons clickable) */}
+      <div className="relative z-20 max-w-4xl">
 
         {/* Badge */}
-        <div className="mb-6 inline-flex items-center gap-2 px-4 py-1 rounded-full border border-primary/30 text-primary text-sm bg-background/50 backdrop-blur-sm">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="mb-6 inline-flex items-center gap-2 px-4 py-1 rounded-full border border-primary/30 text-primary text-sm bg-background/50 backdrop-blur-sm"
+        >
           ● AI-Powered Content Moderation Platform
-        </div>
+        </motion.div>
 
         {/* Heading */}
-        <h1 className="text-5xl md:text-7xl font-extrabold leading-tight mb-6 text-foreground">
+        <motion.h1
+          initial={{ opacity: 0, y: 35 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.15 }}
+          className="text-5xl md:text-7xl font-extrabold leading-tight mb-6 text-foreground"
+        >
           Social Media <br />
           <span className="bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
             Without Harm
           </span>
-        </h1>
+        </motion.h1>
 
         {/* Description */}
-        <p className="text-muted-foreground text-lg max-w-2xl mx-auto mb-10">
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
+          className="text-muted-foreground text-lg max-w-2xl mx-auto mb-10"
+        >
           Savezo uses advanced AI to detect deepfakes, inappropriate content,
           and mental health risks before they reach your feed — keeping
           communities genuinely safe.
-        </p>
+        </motion.p>
 
         {/* Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.45 }}
+          className="flex flex-col sm:flex-row gap-4 justify-center"
+        >
 
           {/* ✅ GET STARTED */}
           <Button
@@ -83,7 +107,7 @@ export function Hero() {
             Try AI Detection
           </Button>
 
-        </div>
+        </motion.div>
 
       </div>
     </section>

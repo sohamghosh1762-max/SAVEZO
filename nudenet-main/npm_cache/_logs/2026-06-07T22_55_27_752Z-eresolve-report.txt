@@ -1,0 +1,30 @@
+'Log files:
+/Users/bipasasaha/Desktop/SAVEZO/nudenet-main/npm_cache/_logs/2026-06-07T22_55_27_752Z-debug-0.log
+
+# npm resolution error report
+
+While resolving: nudenet@0.3.0
+Found: @tensorflow/tfjs-core@4.22.0
+node_modules/@tensorflow/tfjs-core
+  @tensorflow/tfjs-core@"4.22.0" from @tensorflow/tfjs@4.22.0
+  node_modules/@tensorflow/tfjs
+    @tensorflow/tfjs@"^4.5.0" from the root project
+  peer @tensorflow/tfjs-core@"4.22.0" from @tensorflow/tfjs-backend-webgl@4.22.0
+  node_modules/@tensorflow/tfjs-backend-webgl
+    dev @tensorflow/tfjs-backend-webgl@"^4.5.0" from the root project
+    @tensorflow/tfjs-backend-webgl@"4.22.0" from @tensorflow/tfjs@4.22.0
+    node_modules/@tensorflow/tfjs
+      @tensorflow/tfjs@"^4.5.0" from the root project
+
+Could not resolve dependency:
+dev @tensorflow/tfjs-backend-webgpu@"0.0.1-alpha.20" from the root project
+
+Conflicting peer dependency: @tensorflow/tfjs-core@4.5.0
+node_modules/@tensorflow/tfjs-core
+  peer @tensorflow/tfjs-core@"4.5.0" from @tensorflow/tfjs-backend-webgpu@0.0.1-alpha.20
+  node_modules/@tensorflow/tfjs-backend-webgpu
+    dev @tensorflow/tfjs-backend-webgpu@"0.0.1-alpha.20" from the root project
+
+Fix the upstream dependency conflict, or retry
+this command with --force or --legacy-peer-deps
+to accept an incorrect (and potentially broken) dependency resolution.
