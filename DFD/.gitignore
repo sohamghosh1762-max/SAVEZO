@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual Env
+.venv/
+venv/
+
+# Datasets
+DFD/datasets/
+datasets/
+
+# Model Checkpoints~
+DFD/checkpoints/*.pth
+
+# Uploads
+DFD/uploads/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
