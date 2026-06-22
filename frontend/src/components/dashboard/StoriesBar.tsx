@@ -63,12 +63,13 @@ export function StoriesBar() {
   // right after a fresh upload.
   const fetchStories = async () => {
     try {
-      const [userRes, storiesRes] = await Promise.all([
-        api.get("/users"),
-        api.get("/stories"),
-      ]);
+      const currentUser = JSON.parse(
+  localStorage.getItem("savezoUser") || "{}"
+);
 
-      setUserProfile(userRes.data);
+const storiesRes = await api.get("/stories");
+
+setUserProfile(currentUser);
 
       const grouped: any = {};
 
@@ -97,7 +98,8 @@ export function StoriesBar() {
         {
           id: 1,
           create: true,
-          previewImage: userRes.data?.profilePicture || "",
+          previewImage:
+  currentUser?.profilePicture || "",
         },
         ...mongoStories,
       ]);
@@ -162,15 +164,25 @@ export function StoriesBar() {
         }
 
         // CREATE NEW IMAGE STORY
-        const userRes = await api.get("/users");
+        const currentUser = JSON.parse(
+  localStorage.getItem("savezoUser") || "{}"
+);
 
-        await api.post("/stories", {
-          userName: userRes.data.name,
-          avatar: userRes.data.profilePicture,
-          image: reader.result,
-          text: "",
-          background: "",
-        });
+await api.post("/stories", {
+  userId: currentUser._id,
+  userName:
+    currentUser.name ||
+    currentUser.username,
+
+  avatar:
+    currentUser.profilePicture || "",
+
+  image: reader.result,
+
+  text: "",
+
+  background: "",
+});
 
         await fetchStories();
       } catch (error) {
@@ -427,14 +439,16 @@ export function StoriesBar() {
               return;
             }
 
-            const userRes = await api.get("/users");
+            const currentUser = JSON.parse(
+  localStorage.getItem("savezoUser") || "{}"
+);
 
-            await api.post("/stories", {
-              userName: userRes.data.name,
-              avatar: userRes.data.profilePicture,
-              text: story.text,
-              background: story.background,
-            });
+await api.post("/stories", {
+  userName: currentUser.name,
+  avatar: currentUser.profilePicture,
+  text: story.text,
+  background: story.background,
+});
 
             await fetchStories();
 

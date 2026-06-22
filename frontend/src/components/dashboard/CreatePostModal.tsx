@@ -19,8 +19,6 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
   const [selectedFeeling, setSelectedFeeling] = useState<string | null>(null)
   const [showFeelingPicker, setShowFeelingPicker] = useState(false)
   const [activeTab, setActiveTab] = useState<"feelings" | "activities">("feelings")
-
-  // Pre-converted base64 — ready instantly when Post is clicked
   const [base64Image, setBase64Image] = useState<string | null>(null)
 
   const FEELINGS = [
@@ -46,7 +44,7 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
     setRiskScore(null)
     setBase64Image(null)
 
-    // Convert to base64 immediately in the background — ready before user clicks Post
+    // Convert to base64 immediately — ready before user clicks Post
     const reader = new FileReader()
     reader.readAsDataURL(file)
     reader.onloadend = () => setBase64Image(reader.result as string)
@@ -97,21 +95,28 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
   }
 
   const handlePost = async () => {
-    const postBody = {
-      userName: "Alex Johnson",
-      text,
-      likes: 0,
-      comments: 0,
-      shares: 0,
-      feeling: selectedFeeling || "",
-    }
-
     try {
-      const response = await api.post("/posts", {
-        ...postBody,
-        // base64Image is already ready — no FileReader delay here
-        image: base64Image ?? null,
-      })
+      const currentUser = JSON.parse(localStorage.getItem("savezoUser") || "{}")
+
+      if (!currentUser?._id) {
+        alert("Please login again")
+        return
+      }
+
+      const postBody = {
+        userId: currentUser._id,
+        userName: currentUser.name || currentUser.username,
+        profilePicture: currentUser.profilePicture || "",
+        text,
+        image: base64Image || "",
+        feeling: selectedFeeling || "",
+        likes: 0,
+        comments: 0,
+        shares: 0,
+        saved: false,
+      }
+
+      const response = await api.post("/posts", postBody)
 
       onPost(response.data)
 
@@ -122,10 +127,17 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
       setScanStatus("idle")
       setRiskScore(null)
       setSelectedFeeling(null)
+
     } catch (error) {
       console.error("Failed to create post:", error)
     }
   }
+
+  // ✅ Fixed: allow post if there's text OR a safe image; block only if content is blocked or nothing to post
+  const isPostDisabled =
+    scanStatus === "blocked" ||
+    scanStatus === "scanning" ||
+    (!text.trim() && scanStatus !== "safe")
 
   return (
     <div className="mb-6">
@@ -199,7 +211,7 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
             className="w-full bg-transparent border-none outline-none text-lg mb-4 text-foreground placeholder:text-muted-foreground"
           />
 
-          {/* SCAN UI — always mounted, shown via opacity */}
+          {/* SCAN UI */}
           <div className={`mb-4 transition-opacity duration-150 ${scanStatus !== "idle" && selectedFile ? "opacity-100" : "opacity-0 pointer-events-none h-0 mb-0 overflow-hidden"}`}>
 
             {/* Scanning */}
@@ -217,7 +229,12 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
                 <p className="text-sm mt-1">Explicit content detected</p>
                 <button
                   type="button"
-                  onClick={() => { setSelectedFile(null); setScanStatus("idle"); setRiskScore(null); setBase64Image(null) }}
+                  onClick={() => {
+                    setSelectedFile(null)
+                    setScanStatus("idle")
+                    setRiskScore(null)
+                    setBase64Image(null)
+                  }}
                   className="mt-3 px-4 py-2 bg-white text-red-600 rounded-full text-sm"
                 >
                   Try Different File
@@ -261,7 +278,7 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
             </div>
           </div>
 
-          {/* FEELING PICKER — CSS toggle instead of conditional mount */}
+          {/* FEELING PICKER */}
           <div className={`mb-4 bg-muted border border-border rounded-xl p-4 transition-opacity duration-150 ${showFeelingPicker ? "opacity-100" : "opacity-0 pointer-events-none h-0 p-0 mb-0 overflow-hidden"}`}>
             <div className="flex gap-4 mb-4">
               <button
@@ -297,11 +314,11 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
           {/* POST BUTTON */}
           <Button
             type="button"
-            disabled={scanStatus !== "safe" && !text.trim()}
+            disabled={isPostDisabled}
             onClick={handlePost}
             className="w-full bg-accent-gradient text-white disabled:opacity-50"
           >
-            Post
+            {scanStatus === "scanning" ? "Scanning..." : "Post"}
           </Button>
 
         </DialogContent>

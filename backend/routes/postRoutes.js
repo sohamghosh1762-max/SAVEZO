@@ -6,12 +6,25 @@ const router = express.Router();
 /* CREATE POST */
 router.post("/", async (req, res) => {
   try {
+    console.log("POST BODY:");
+    console.log(req.body);
+
     const post = await Post.create(req.body);
+
+    console.log("POST SAVED:");
+    console.log(post);
+
     res.status(201).json(post);
   } catch (error) {
-    res.status(500).json(error);
+    console.log("POST ERROR:");
+    console.log(error);
+
+    res.status(500).json({
+      message: error.message,
+    });
   }
 });
+
 
 /* GET ALL POSTS */
 router.get("/", async (req, res) => {

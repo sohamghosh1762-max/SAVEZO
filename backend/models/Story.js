@@ -12,6 +12,7 @@ const StorySchema = new mongoose.Schema(
     userName: {
       type: String,
       required: true,
+      trim: true,
     },
 
     avatar: {
@@ -35,7 +36,7 @@ const StorySchema = new mongoose.Schema(
       default: "",
     },
 
-    /* STORY SETTINGS */
+    /* STORY ANALYTICS */
     views: {
       type: Number,
       default: 0,
@@ -48,6 +49,7 @@ const StorySchema = new mongoose.Schema(
       },
     ],
 
+    /* EDIT STATUS */
     isEdited: {
       type: Boolean,
       default: false,
@@ -57,7 +59,7 @@ const StorySchema = new mongoose.Schema(
     createdAt: {
       type: Date,
       default: Date.now,
-      expires: 86400,
+      expires: 86400, // 24 Hours
     },
   },
   {

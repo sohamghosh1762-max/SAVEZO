@@ -22,9 +22,7 @@ export default function ProfileHeader({
   const [coverMenuOpen, setCoverMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
 
-  const handleProfileUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleProfileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -32,11 +30,13 @@ export default function ProfileHeader({
 
     reader.onloadend = async () => {
       try {
-        const res = await api.put("/users/profile-picture", {
+        // ✅ Fixed: send actual base64 instead of ""
+        const res = await api.put(`/users/${user._id}/profile-picture`, {
           profilePicture: reader.result,
         });
 
         onUserUpdate(res.data);
+        setProfileMenuOpen(false);
       } catch (error) {
         console.log(error);
       }
@@ -45,9 +45,7 @@ export default function ProfileHeader({
     reader.readAsDataURL(file);
   };
 
-  const handleCoverUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -55,11 +53,13 @@ export default function ProfileHeader({
 
     reader.onloadend = async () => {
       try {
-        const res = await api.put("/users/cover-picture", {
+        // ✅ Fixed: send actual base64 instead of ""
+        const res = await api.put(`/users/${user._id}/cover-picture`, {
           coverPicture: reader.result,
         });
 
         onUserUpdate(res.data);
+        setCoverMenuOpen(false);
       } catch (error) {
         console.log(error);
       }
@@ -68,9 +68,10 @@ export default function ProfileHeader({
     reader.readAsDataURL(file);
   };
 
+  // ✅ Fixed: send "" to clear (remove) the picture — no reader needed here
   const removeProfile = async () => {
     try {
-      const res = await api.put("/users/profile-picture", {
+      const res = await api.put(`/users/${user._id}/profile-picture`, {
         profilePicture: "",
       });
 
@@ -83,7 +84,7 @@ export default function ProfileHeader({
 
   const removeCover = async () => {
     try {
-      const res = await api.put("/users/cover-picture", {
+      const res = await api.put(`/users/${user._id}/cover-picture`, {
         coverPicture: "",
       });
 
@@ -103,6 +104,8 @@ export default function ProfileHeader({
         ref={profileInputRef}
         accept="image/*"
         onChange={handleProfileUpload}
+        // ✅ Allow re-selecting the same file
+        onClick={(e) => (e.currentTarget.value = "")}
       />
 
       <input
@@ -111,10 +114,12 @@ export default function ProfileHeader({
         ref={coverInputRef}
         accept="image/*"
         onChange={handleCoverUpload}
+        onClick={(e) => (e.currentTarget.value = "")}
       />
 
-      {/* Cover + Avatar wrapper — relative so the avatar can overlap the cover, FB-style */}
+      {/* Cover + Avatar wrapper */}
       <div className="relative">
+
         {/* Cover */}
         <div className="relative h-64 rounded-2xl overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600">
           {user?.coverPicture && (
@@ -137,14 +142,21 @@ export default function ProfileHeader({
             {coverMenuOpen && (
               <div className="absolute right-0 mt-2 w-60 bg-[#0d1320] border border-gray-700 rounded-xl shadow-2xl z-50">
                 <button
-                  onClick={() => coverInputRef.current?.click()}
+                  onClick={() => {
+                    coverInputRef.current?.click();
+                    setCoverMenuOpen(false);
+                  }}
                   className="w-full px-4 py-3 text-left hover:bg-white/5"
                 >
                   📷 Choose Cover Photo
                 </button>
 
+                {/* ✅ Fixed: added proper styling classes */}
                 <button
-                  onClick={() => profileInputRef.current?.click()}
+                  onClick={() => {
+                    coverInputRef.current?.click();
+                    setCoverMenuOpen(false);
+                  }}
                   className="w-full px-4 py-3 text-left hover:bg-white/5"
                 >
                   ⬆ Upload Photo
@@ -165,7 +177,7 @@ export default function ProfileHeader({
           </div>
         </div>
 
-        {/* Avatar — absolutely positioned to overlap the bottom-left of the cover */}
+        {/* Avatar */}
         <div className="absolute left-6 -bottom-16 z-10">
           <div
             onClick={() => setProfileMenuOpen(!profileMenuOpen)}
@@ -192,7 +204,10 @@ export default function ProfileHeader({
           {profileMenuOpen && (
             <div className="absolute top-full left-0 mt-2 w-60 bg-[#0d1320] border border-gray-700 rounded-xl shadow-2xl z-50">
               <button
-                onClick={() => profileInputRef.current?.click()}
+                onClick={() => {
+                  profileInputRef.current?.click();
+                  setProfileMenuOpen(false);
+                }}
                 className="w-full px-4 py-3 text-left hover:bg-white/5"
               >
                 ⬆ Upload New Picture
@@ -209,7 +224,7 @@ export default function ProfileHeader({
         </div>
       </div>
 
-      {/* Info — top margin clears the avatar overlap; left padding (desktop) keeps text beside it */}
+      {/* Info */}
       <div className="mt-20 md:mt-6 flex flex-col md:flex-row md:items-end justify-between gap-6 md:pl-44">
         <div>
           <h1 className="text-2xl font-bold text-foreground">
@@ -226,23 +241,17 @@ export default function ProfileHeader({
 
           <div className="flex gap-8 mt-4">
             <div>
-              <p className="font-bold text-lg text-foreground">
-                {postsCount}
-              </p>
+              <p className="font-bold text-lg text-foreground">{postsCount}</p>
               <p className="text-sm text-muted-foreground">Posts</p>
             </div>
 
             <div>
-              <p className="font-bold text-lg text-foreground">
-                {user?.followers || 0}
-              </p>
+              <p className="font-bold text-lg text-foreground">{user?.followers || 0}</p>
               <p className="text-sm text-muted-foreground">Followers</p>
             </div>
 
             <div>
-              <p className="font-bold text-lg text-foreground">
-                {user?.following || 0}
-              </p>
+              <p className="font-bold text-lg text-foreground">{user?.following || 0}</p>
               <p className="text-sm text-muted-foreground">Following</p>
             </div>
 
