@@ -17,6 +17,44 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [selectedFeeling, setSelectedFeeling] = useState<string | null>(null)
+  const [showFeelingPicker, setShowFeelingPicker] =
+  useState(false)
+
+const [activeTab, setActiveTab] =
+  useState<"feelings" | "activities">(
+    "feelings"
+  )
+
+  const FEELINGS = [
+  "😊 Happy",
+  "😇 Blessed",
+  "🥰 Loved",
+  "😢 Sad",
+  "😍 Lovely",
+  "😁 Thankful",
+  "🤩 Excited",
+  "❤️ In Love",
+  "🤪 Crazy",
+  "🙏 Grateful",
+  "😌 Blissful",
+  "✨ Fantastic",
+  "🥳 Festive",
+]
+
+const ACTIVITIES = [
+  "🎉 Celebrating",
+  "🍿 Watching",
+  "🍴 Eating",
+  "🍺 Drinking",
+  "📅 Attending",
+  "✈️ Travelling To",
+  "🎧 Listening To",
+  "🔍 Looking For",
+  "📖 Reading",
+  "💻 Working On",
+  "🏋️ Exercising",
+  "🎮 Gaming",
+]
 
   const [scanStatus, setScanStatus] = useState<
   "idle" | "scanning" | "safe" | "blocked"
@@ -88,9 +126,8 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
   }
 
   const handleFeelingClick = () => {
-    setSelectedFeeling("😊 Happy")
-    setOpen(true)
-  }
+  setShowFeelingPicker(true)
+}
 
   return (
     <div className="mb-6">
@@ -163,9 +200,15 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
 
             <div>
               <p className="font-semibold text-foreground">Alex Johnson</p>
+                {selectedFeeling && (
+    <p className="text-xs text-primary">
+      {selectedFeeling}
+    </p>
+  )}
+</div>
               <p className="text-xs text-muted-foreground">🌍 Public</p>
             </div>
-          </div>
+        
 
           {/* TEXT */}
           <textarea
@@ -261,6 +304,8 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
                 likes: 0,
                 comments: 0,
                 shares: 0,
+
+                feeling: selectedFeeling || "",
               }
 
               const submitPost = async (image?: string) => {
