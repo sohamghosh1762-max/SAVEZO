@@ -18,16 +18,32 @@ export default function EditProfileModal({
   if (!open) return null;
 
   const handleSave = async () => {
-    try {
-      const res = await api.put("/users", form);
-
-      onSave(res.data);
-      onClose();
-    } catch (error) {
-      console.log(error);
+  try {
+    if (!form?._id) {
+      alert("User ID not found");
+      return;
     }
-  };
 
+    const res = await api.put(
+      `/users/${form._id}`,
+      form
+    );
+
+    localStorage.setItem(
+      "savezoUser",
+      JSON.stringify(res.data)
+    );
+
+    onSave(res.data);
+
+    onClose();
+
+    alert("Profile updated successfully ✅");
+  } catch (error) {
+    console.log(error);
+    alert("Failed to update profile ❌");
+  }
+};
   return (
     <div className="fixed inset-0 z-[9999] bg-black/70 flex items-center justify-center">
       <div className="w-[600px] bg-[#0d1320] rounded-2xl p-6 border border-gray-700">

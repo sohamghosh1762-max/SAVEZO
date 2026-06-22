@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { motion } from "framer-motion"
 import { FloatingBubbles } from "./FloatingBubbles"
+import Link from "next/link";
 
 export function Hero() {
   const router = useRouter()
@@ -88,14 +89,22 @@ export function Hero() {
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
 
-          {/* ✅ GET STARTED */}
-          <Button
-            size="lg"
-            onClick={() => router.push("/dashboard")}
-            className="bg-accent-gradient text-white hover:opacity-90 px-8 py-6 rounded-xl"
-          >
-            Get Started →
-          </Button>
+          <Link href="/auth">
+  <button
+    className="
+      px-8
+      py-4
+      rounded-xl
+      bg-gradient-to-r
+      from-blue-500
+      to-cyan-500
+      text-white
+      font-semibold
+    "
+  >
+    Get Started →
+  </button>
+</Link>
 
           {/* ✅ TRY AI DETECTION */}
           <Button

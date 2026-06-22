@@ -13,11 +13,12 @@ export function CreateStoryModal({
   onPhotoStory,
   onTextStory,
 }: Props) {
-  if (!open) return null;
-
   return (
-    <div className="fixed inset-0 z-[9999] bg-black/70 flex items-center justify-center">
-
+    <div
+      className={`fixed inset-0 z-[9999] bg-black/70 flex items-center justify-center transition-opacity duration-150 ${
+        open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+      }`}
+    >
       <div className="bg-card rounded-3xl p-8 w-[700px] max-w-[95vw]">
 
         <div className="flex justify-between items-center mb-6">

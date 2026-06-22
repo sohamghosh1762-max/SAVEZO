@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 import { SidebarLeft } from "@/components/dashboard/SidebarLeft";
 import { SidebarRight } from "@/components/dashboard/SidebarRight";
@@ -11,14 +12,39 @@ import { StoriesBar } from "@/components/dashboard/StoriesBar";
 import api from "@/lib/api";
 
 export default function Dashboard() {
-  // ==========================
-  // MONGODB POSTS
-  // ==========================
-  const [mongoPosts, setMongoPosts] = useState<any[]>([]);
+  const router = useRouter();
 
+  const [mongoPosts, setMongoPosts] = useState<any[]>([]);
+  const [currentUser, setCurrentUser] =
+    useState<any>(null);
+
+  // ==========================
+  // AUTH CHECK
+  // ==========================
+  useEffect(() => {
+    const token =
+      localStorage.getItem("token");
+
+    const user =
+      localStorage.getItem("savezoUser");
+
+    if (!token || !user) {
+      router.push("/auth");
+      return;
+    }
+
+    setCurrentUser(
+      JSON.parse(user)
+    );
+  }, [router]);
+
+  // ==========================
+  // FETCH POSTS
+  // ==========================
   const fetchPosts = async () => {
     try {
       const res = await api.get("/posts");
+
       setMongoPosts(res.data);
     } catch (error) {
       console.log(error);
@@ -32,13 +58,36 @@ export default function Dashboard() {
   // ==========================
   // REALTIME NEW POST
   // ==========================
-  const handleAddPost = (newPost: any) => {
-    setMongoPosts((prev) => [newPost, ...prev]);
+  const handleAddPost = (
+    newPost: any
+  ) => {
+    setMongoPosts((prev) => [
+      newPost,
+      ...prev,
+    ]);
   };
 
+  if (!currentUser) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background text-foreground">
+        Loading...
+      </div>
+    );
+  }
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr_280px] min-h-[calc(100vh-68px)] bg-background text-foreground transition-colors duration-300">
-      
+    <div
+      className="
+        grid
+        grid-cols-1
+        lg:grid-cols-[260px_1fr_280px]
+        min-h-[calc(100vh-68px)]
+        bg-background
+        text-foreground
+        transition-colors
+        duration-300
+      "
+    >
       {/* LEFT SIDEBAR */}
       <aside className="hidden lg:block border-r border-border">
         <SidebarLeft />
@@ -49,14 +98,14 @@ export default function Dashboard() {
         <div className="w-full max-w-[620px]">
 
           {/* CREATE POST */}
-          <CreatePostModal onPost={handleAddPost} />
+          <CreatePostModal
+            onPost={handleAddPost}
+          />
 
           {/* STORIES */}
           <StoriesBar />
 
-          {/* ==========================
-              ALL POSTS FROM MONGODB
-          ========================== */}
+          {/* POSTS */}
           {mongoPosts.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">
               No posts available
@@ -66,9 +115,14 @@ export default function Dashboard() {
               <PostCard
                 key={post._id}
                 id={post._id}
-                author={post.userName}
+                author={
+                  post.userName ||
+                  "Unknown User"
+                }
                 initials={
-                  post.userName?.charAt(0).toUpperCase() || "U"
+                  post.userName
+                    ?.charAt(0)
+                    .toUpperCase() || "U"
                 }
                 time={new Date(
                   post.createdAt
@@ -76,13 +130,16 @@ export default function Dashboard() {
                 text={post.text}
                 image={post.image}
                 likes={post.likes || 0}
-                comments={post.comments || 0}
+                comments={
+                  post.comments || 0
+                }
                 shares={post.shares || 0}
-                saved={post.saved || false}
+                saved={
+                  post.saved || false
+                }
               />
             ))
           )}
-
         </div>
       </main>
 

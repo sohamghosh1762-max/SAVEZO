@@ -632,24 +632,47 @@ export default function Profile() {
   }, []);
 
   const fetchProfile = async () => {
-    try {
-      const userRes = await api.get("/users");
+  try {
+    const savedUser =
+      localStorage.getItem("savezoUser");
 
-setUser(userRes.data);
-      const postRes = await api.get("/posts");
+    if (!savedUser) return;
 
-const myPosts = postRes.data.filter(
-  (post: any) =>
-    post.userName === userRes.data.name
-);
+    const currentUser =
+      JSON.parse(savedUser);
 
-setPosts(myPosts);
-      const storyRes = await api.get("/stories");
-      setStories(storyRes.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    const userRes = await api.get(
+      `/users/${currentUser._id}`
+    );
+
+    setUser(userRes.data);
+
+    const postRes = await api.get("/posts");
+
+    const myPosts =
+      postRes.data.filter(
+        (post: any) =>
+          post.userName ===
+          userRes.data.name
+      );
+
+    setPosts(myPosts);
+
+    const storyRes =
+      await api.get("/stories");
+
+    const myStories =
+      storyRes.data.filter(
+        (story: any) =>
+          story.userName ===
+          userRes.data.name
+      );
+
+    setStories(myStories);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   // Called by CreatePostModal once a post is successfully saved to MongoDB.
   const handleNewPost = (post: any) => {

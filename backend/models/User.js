@@ -2,19 +2,51 @@ import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema(
   {
-    name: String,
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
-    username: String,
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
 
-    email: String,
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
 
-    bio: String,
+    password: {
+      type: String,
+      required: true,
+    },
 
-    location: String,
+    bio: {
+      type: String,
+      default: "",
+    },
 
-    university: String,
+    location: {
+      type: String,
+      default: "",
+    },
 
-    skills: [String],
+    university: {
+      type: String,
+      default: "",
+    },
+
+    skills: {
+      type: [String],
+      default: [],
+    },
 
     profilePicture: {
       type: String,
@@ -34,6 +66,24 @@ const UserSchema = new mongoose.Schema(
     following: {
       type: Number,
       default: 0,
+    },
+
+    savedPosts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
+
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
     },
   },
   {
