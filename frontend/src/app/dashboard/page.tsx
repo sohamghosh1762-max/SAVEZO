@@ -1,87 +1,44 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { SidebarLeft } from "@/components/dashboard/SidebarLeft"
-import { SidebarRight } from "@/components/dashboard/SidebarRight"
-import { PostCard } from "@/components/dashboard/PostCard"
-import { CreatePostModal } from "@/components/dashboard/CreatePostModal"
+import { useState, useEffect } from "react";
 
-type DashboardPost = {
-  id: number
-  author: string
-  initials: string
-  time: string
-  text: string
-  variant: "video" | "split" | "gallery" | "alert" | "text"
-}
+import { SidebarLeft } from "@/components/dashboard/SidebarLeft";
+import { SidebarRight } from "@/components/dashboard/SidebarRight";
+import { PostCard } from "@/components/dashboard/PostCard";
+import { CreatePostModal } from "@/components/dashboard/CreatePostModal";
+import { StoriesBar } from "@/components/dashboard/StoriesBar";
+
+import api from "@/lib/api";
 
 export default function Dashboard() {
+  // ==========================
+  // MONGODB POSTS
+  // ==========================
+  const [mongoPosts, setMongoPosts] = useState<any[]>([]);
 
-  // 🧠 POSTS STATE
-  const [posts, setPosts] = useState<DashboardPost[]>([
-    {
-      id: 1,
-      author: "Alex Rivera",
-      initials: "AR",
-      time: "2 hours ago",
-      text: "Incredible drone footage I captured over the city last night 🌃✨",
-      variant: "video",
-    },
-    {
-      id: 2,
-      author: "Samira Khan",
-      initials: "SK",
-      time: "5 hours ago",
-      text: "Amazing day at the AI Safety Conference! #DigitalWellbeing",
-      variant: "split",
-    },
-    {
-      id: 3,
-      author: "James Park",
-      initials: "JP",
-      time: "8 hours ago",
-      text: "Quick tutorial I made on how to spot AI-generated deepfake videos.",
-      variant: "video",
-    },
-    {
-      id: 4,
-      author: "AI Safety System",
-      initials: "⚠",
-      time: "System Alert",
-      text: "",
-      variant: "alert",
-    },
-    {
-      id: 5,
-      author: "Mia Laurent",
-      initials: "ML",
-      time: "Yesterday",
-      text: "Weekend vibes 🌞 Nature is the best therapy.",
-      variant: "gallery",
-    },
-    {
-      id: 6,
-      author: "Zara Mitchell",
-      initials: "ZM",
-      time: "2 days ago",
-      text: "Thread 🧵 on why AI-powered moderation is the only scalable solution for platform safety.",
-      variant: "text",
-    },
-  ])
-
-  // ➕ ADD POST FUNCTION
-  const handleAddPost = (newPost: Omit<DashboardPost, "id">) => {
-    const postWithId: DashboardPost = {
-      ...newPost,
-      id: Date.now(), // ✅ unique id
+  const fetchPosts = async () => {
+    try {
+      const res = await api.get("/posts");
+      setMongoPosts(res.data);
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    setPosts((prev) => [postWithId, ...prev])
-  }
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  // ==========================
+  // REALTIME NEW POST
+  // ==========================
+  const handleAddPost = (newPost: any) => {
+    setMongoPosts((prev) => [newPost, ...prev]);
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr_280px] min-h-[calc(100vh-68px)] bg-background text-foreground transition-colors duration-300">
-
+      
       {/* LEFT SIDEBAR */}
       <aside className="hidden lg:block border-r border-border">
         <SidebarLeft />
@@ -94,10 +51,37 @@ export default function Dashboard() {
           {/* CREATE POST */}
           <CreatePostModal onPost={handleAddPost} />
 
-          {/* POSTS */}
-          {posts.map((post) => (
-            <PostCard key={post.id} {...post} />
-          ))}
+          {/* STORIES */}
+          <StoriesBar />
+
+          {/* ==========================
+              ALL POSTS FROM MONGODB
+          ========================== */}
+          {mongoPosts.length === 0 ? (
+            <div className="text-center py-10 text-muted-foreground">
+              No posts available
+            </div>
+          ) : (
+            mongoPosts.map((post) => (
+              <PostCard
+                key={post._id}
+                id={post._id}
+                author={post.userName}
+                initials={
+                  post.userName?.charAt(0).toUpperCase() || "U"
+                }
+                time={new Date(
+                  post.createdAt
+                ).toLocaleString()}
+                text={post.text}
+                image={post.image}
+                likes={post.likes || 0}
+                comments={post.comments || 0}
+                shares={post.shares || 0}
+                saved={post.saved || false}
+              />
+            ))
+          )}
 
         </div>
       </main>
@@ -106,7 +90,6 @@ export default function Dashboard() {
       <aside className="hidden lg:block border-l border-border">
         <SidebarRight />
       </aside>
-
     </div>
-  )
+  );
 }

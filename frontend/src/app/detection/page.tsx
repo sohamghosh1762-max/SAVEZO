@@ -8,6 +8,7 @@ import ProgressSteps from "@/components/detection/ProgressSteps"
 import WhatWeAnalyze from "@/components/detection/WhatWeAnalyze"
 import DemoScenarios from "@/components/detection/DemoScenarios"
 import RecentDetections from "@/components/detection/RecentDetections"
+import api from "@/lib/api";
 
 export default function DetectionPage() {
   const [file, setFile] = useState<File | null>(null)
@@ -15,20 +16,58 @@ export default function DetectionPage() {
   const [result, setResult] = useState<any>(null)
 
   const handleAnalyze = async () => {
-    if (!file) return
+  if (!file) return;
 
-    setAnalyzing(true)
+  setAnalyzing(true);
 
-    setTimeout(() => {
-      setResult({
+  const reader = new FileReader();
+
+  reader.onloadend = async () => {
+    const base64Preview = reader.result;
+
+    setTimeout(async () => {
+      const analysisResult = {
         deepfake: 72,
         nude: 12,
         mental: 5,
         overall: 64,
-      })
-      setAnalyzing(false)
-    }, 3000)
-  }
+      };
+
+      setResult(analysisResult);
+
+      try {
+        await api.post("/detections", {
+          filename: file.name,
+          fileType: file.type,
+
+          // SAVE IMAGE PREVIEW
+          preview: base64Preview,
+
+          result:
+            analysisResult.overall > 50
+              ? "Fake"
+              : "Real",
+
+          confidence:
+            analysisResult.overall,
+        });
+
+        console.log(
+          "Detection saved successfully"
+        );
+      } catch (error) {
+        console.log(
+          "Detection save failed",
+          error
+        );
+      }
+
+      setAnalyzing(false);
+    }, 3000);
+  };
+
+  reader.readAsDataURL(file);
+};
 
   const handleRemoveFile = () => {
     setFile(null)

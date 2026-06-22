@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
+import api from "@/lib/api";
 import {
   Dialog,
   DialogContent,
@@ -18,14 +19,14 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
   const [selectedFeeling, setSelectedFeeling] = useState<string | null>(null)
 
   const [scanStatus, setScanStatus] = useState<
-    "idle" | "scanning" | "safe" | "blocked"
-  >("idle")
+  "idle" | "scanning" | "safe" | "blocked"
+>("idle");
 
   const [riskScore, setRiskScore] = useState<number | null>(null)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // 🔥 HANDLE FILE + AI SCAN
+  // HANDLE FILE + AI SCAN
   const handleFile = async (file: File) => {
     setSelectedFile(file)
     setOpen(true)
@@ -46,7 +47,7 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
       }
 
       const result = await response.json()
-      
+
       setRiskScore(result.riskScore)
       if (result.nude) {
         setScanStatus("blocked")
@@ -55,16 +56,14 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
       }
     } catch (error) {
       console.warn("Scan server connection error, using local fallback:", error)
-      
-      // Graceful offline fallback: block if filename contains explicit keywords
+
       const fileNameLower = file.name.toLowerCase()
-      const isTestBlock = 
-        fileNameLower.includes("nude") || 
-        fileNameLower.includes("explicit") || 
+      const isTestBlock =
+        fileNameLower.includes("nude") ||
+        fileNameLower.includes("explicit") ||
         fileNameLower.includes("nsfw") ||
         fileNameLower.includes("sexy")
 
-      // Simulate a brief network delay for realistic loading feel
       setTimeout(() => {
         if (isTestBlock) {
           setRiskScore(90)
@@ -77,14 +76,15 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
     }
   }
 
+  // Open the native file picker. The Dialog itself opens once a file
+  // is actually selected (inside handleFile), so we don't fight Radix's
+  // focus trap by opening both at once.
   const handlePhotoClick = () => {
     fileInputRef.current?.click()
-    setOpen(true)
   }
 
   const handleLiveClick = () => {
     fileInputRef.current?.click()
-    setOpen(true)
   }
 
   const handleFeelingClick = () => {
@@ -118,15 +118,15 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
 
           <div className="flex justify-between text-sm text-muted-foreground">
 
-            <button onClick={handleLiveClick} className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted hover:text-foreground transition">
+            <button type="button" onClick={handleLiveClick} className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted hover:text-foreground transition">
               🎬 <span>Live Video</span>
             </button>
 
-            <button onClick={handlePhotoClick} className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted hover:text-foreground transition">
+            <button type="button" onClick={handlePhotoClick} className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted hover:text-foreground transition">
               🖼 <span>Photo/Video</span>
             </button>
 
-            <button onClick={handleFeelingClick} className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted hover:text-foreground transition">
+            <button type="button" onClick={handleFeelingClick} className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted hover:text-foreground transition">
               😊 <span>Feeling</span>
             </button>
 
@@ -143,13 +143,14 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
             if (e.target.files && e.target.files[0]) {
               handleFile(e.target.files[0])
             }
+            // allow re-selecting the same file later
+            e.target.value = ""
           }}
         />
 
         {/* MODAL */}
         <DialogContent className="bg-card border border-border text-foreground rounded-xl shadow-card">
 
-          {/* ✅ REQUIRED ACCESSIBILITY FIX */}
           <DialogTitle>
             <VisuallyHidden>Create Post</VisuallyHidden>
           </DialogTitle>
@@ -193,6 +194,7 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
                   <p className="text-sm mt-1">Explicit content detected</p>
 
                   <button
+                    type="button"
                     onClick={() => {
                       setSelectedFile(null)
                       setScanStatus("idle")
@@ -219,13 +221,13 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
                       <p className="text-xs text-muted-foreground truncate max-w-xs">{selectedFile.name}</p>
                     </div>
                   )}
-                  
+
                   <span className="absolute top-3 right-3 bg-green-500 text-white text-xs px-3 py-1 rounded-full font-semibold shadow-md z-10">
                     ✔ AI Verified Safe
                   </span>
-                  
+
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
-                  
+
                   <span className="absolute bottom-3 left-3 text-xs text-green-400 font-semibold z-10">
                     {riskScore !== null ? `${riskScore}% Explicit Risk` : "Safe"}
                   </span>
@@ -240,35 +242,54 @@ export function CreatePostModal({ onPost }: { onPost: (post: any) => void }) {
             <span className="text-sm text-muted-foreground">Add to your post</span>
 
             <div className="flex gap-3 text-lg">
-              <button onClick={handlePhotoClick}>🖼</button>
-              <button onClick={handleFeelingClick}>😊</button>
-              <button>📍</button>
+              <button type="button" onClick={handlePhotoClick}>🖼</button>
+              <button type="button" onClick={handleFeelingClick}>😊</button>
+              <button type="button">📍</button>
             </div>
           </div>
 
           {/* POST BUTTON */}
           <Button
-            disabled={scanStatus !== "safe"}
+            type="button"
+            disabled={scanStatus !== "safe" && !text.trim()}
             onClick={() => {
-              if (!selectedFile) return
+    console.log("POST CLICKED");
 
-              const newPost = {
-                author: "Alex Johnson",
-                initials: "AJ",
-                time: "Just now",
-                text: text || "New post",
-                variant: "video",
+              const postBody = {
+                userName: "Alex Johnson",
+                text: text,
+                likes: 0,
+                comments: 0,
+                shares: 0,
               }
 
-              onPost(newPost)
+              const submitPost = async (image?: string) => {
+                try {
+                  const response = await api.post("/posts", {
+                    ...postBody,
+                    image: image ?? null,
+                  });
 
-              // RESET
-              setOpen(false)
-              setText("")
-              setSelectedFile(null)
-              setScanStatus("idle")
-              setRiskScore(null)
-              setSelectedFeeling(null)
+                  onPost(response.data);
+
+                  setOpen(false);
+                  setText("");
+                  setSelectedFile(null);
+                  setScanStatus("idle");
+                  setRiskScore(null);
+                  setSelectedFeeling(null);
+                } catch (error) {
+                  console.error("Failed to create post:", error);
+                }
+              }
+
+              if (selectedFile) {
+                const reader = new FileReader();
+                reader.readAsDataURL(selectedFile);
+                reader.onloadend = () => submitPost(reader.result as string);
+              } else {
+                submitPost();
+              }
             }}
             className="w-full bg-accent-gradient text-white disabled:opacity-50"
           >
