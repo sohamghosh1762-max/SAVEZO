@@ -43,8 +43,9 @@ class XceptionDeepfake(nn.Module):
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward pass."""
-        return torch.sigmoid(self.model(x))
-
+        out = self.model(x)
+        out = torch.sigmoid(out)
+        return out.view(-1)
 
 # =============================================================================
 # MODEL 2: Vision Transformer (ViT) Deepfake Detector
@@ -75,8 +76,9 @@ class ViTDeepfake(nn.Module):
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward pass."""
-        return torch.sigmoid(self.model(x))
-
+        out = self.model(x)
+        out = torch.sigmoid(out)
+        return out.view(-1)
 
 # =============================================================================
 # MODEL 3: FFT + CNN + LSTM Hybrid Detector
@@ -259,8 +261,8 @@ class FFT_CNN_LSTM(nn.Module):
         # Classification
         out = self.fc(last_hidden)
         
-        return torch.sigmoid(out)
-
+        out = torch.sigmoid(out)
+        return out.view(-1)
 
 # =============================================================================
 # Image Dataset for Xception and ViT
@@ -360,18 +362,20 @@ def train_model(
             imgs, labels = imgs.to(device), labels.to(device)
             
             optimizer.zero_grad()
-            preds = model(imgs).squeeze()
+            preds = model(imgs)
+            preds = preds.view(-1)
+            labels = labels.view(-1)
             loss = criterion(preds, labels)
             loss.backward()
             optimizer.step()
             
             loss_total += loss.item()
-            predicted = (preds >= 0.5).float()
+            predicted = (preds >= 0.5).float().view(-1)
             correct += (predicted == labels).sum().item()
             total += labels.size(0)
         
-        train_loss = loss_total / len(train_loader)
-        train_acc = correct / total
+        train_loss = loss_total / max(len(train_loader), 1)
+        train_acc = correct / max(total , 1)
         history['train_loss'].append(train_loss)
         history['train_acc'].append(train_acc)
         
@@ -385,16 +389,18 @@ def train_model(
             with torch.no_grad():
                 for imgs, labels in val_loader:
                     imgs, labels = imgs.to(device), labels.to(device)
-                    preds = model(imgs).squeeze()
+                    preds = model(imgs)
+                    preds = preds.view(-1)
+                    labels = labels.view(-1)
                     loss = criterion(preds, labels)
                     
                     val_loss_total += loss.item()
-                    predicted = (preds >= 0.5).float()
+                    predicted = (preds >= 0.5).float().view(-1)
                     val_correct += (predicted == labels).sum().item()
                     val_total += labels.size(0)
             
-            val_loss = val_loss_total / len(val_loader)
-            val_acc = val_correct / val_total
+            val_loss = val_loss_total / max(len(val_loader), 1)
+            val_acc = val_correct / max(val_total, 1)
             history['val_loss'].append(val_loss)
             history['val_acc'].append(val_acc)
             
@@ -434,7 +440,12 @@ def evaluate_model(
     with torch.no_grad():
         for imgs, labels in data_loader:
             imgs = imgs.to(device)
-            preds = model(imgs).cpu().numpy().flatten()
+            preds = (
+                model(imgs)
+                .view(-1)
+                .cpu()
+                .numpy()
+            )            
             all_preds.extend(preds)
             all_labels.extend(labels.numpy())
     

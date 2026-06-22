@@ -291,6 +291,66 @@ const ACTIVITIES = [
             </div>
           </div>
 
+          {showFeelingPicker && (
+  <div className="mb-4 bg-muted border border-border rounded-xl p-4">
+
+    <div className="flex gap-4 mb-4">
+      <button
+        onClick={() =>
+          setActiveTab("feelings")
+        }
+        className={`font-medium ${
+          activeTab === "feelings"
+            ? "text-blue-500"
+            : ""
+        }`}
+      >
+        Feelings
+      </button>
+
+      <button
+        onClick={() =>
+          setActiveTab("activities")
+        }
+        className={`font-medium ${
+          activeTab === "activities"
+            ? "text-blue-500"
+            : ""
+        }`}
+      >
+        Activities
+      </button>
+    </div>
+
+    <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto">
+
+      {(activeTab === "feelings"
+        ? FEELINGS
+        : ACTIVITIES
+      ).map((item) => (
+        <button
+          key={item}
+          onClick={() => {
+            setSelectedFeeling(item)
+            setShowFeelingPicker(false)
+          }}
+          className="
+            text-left
+            px-3
+            py-2
+            rounded-lg
+            hover:bg-background
+            transition
+          "
+        >
+          {item}
+        </button>
+      ))}
+
+    </div>
+  </div>
+)}
+
           {/* POST BUTTON */}
           <Button
             type="button"

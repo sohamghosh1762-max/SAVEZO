@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+
 import UploadZone from "@/components/detection/UploadZone"
 import DetectionResult from "@/components/detection/DetectionResult"
 import ProgressSteps from "@/components/detection/ProgressSteps"
@@ -12,73 +13,41 @@ import api from "@/lib/api";
 
 export default function DetectionPage() {
   const [file, setFile] = useState<File | null>(null)
-  const [analyzing, setAnalyzing] = useState(false)
-  const [result, setResult] = useState<any>(null)
 
-  const handleAnalyze = async () => {
-  if (!file) return;
+  const [analyzing, setAnalyzing] =
+    useState(false)
 
-  setAnalyzing(true);
+  const [result, setResult] =
+    useState<any>(null)
 
-  const reader = new FileReader();
+  const [error, setError] =
+    useState<string | null>(null)
 
-  reader.onloadend = async () => {
-    const base64Preview = reader.result;
-
-    setTimeout(async () => {
-      const analysisResult = {
-        deepfake: 72,
-        nude: 12,
-        mental: 5,
-        overall: 64,
-      };
-
-      setResult(analysisResult);
-
-      try {
-        await api.post("/detections", {
-          filename: file.name,
-          fileType: file.type,
-
-          // SAVE IMAGE PREVIEW
-          preview: base64Preview,
-
-          result:
-            analysisResult.overall > 50
-              ? "Fake"
-              : "Real",
-
-          confidence:
-            analysisResult.overall,
-        });
-
-        console.log(
-          "Detection saved successfully"
-        );
-      } catch (error) {
-        console.log(
-          "Detection save failed",
-          error
-        );
-      }
-
-      setAnalyzing(false);
-    }, 3000);
-  };
-
-  reader.readAsDataURL(file);
-};
+  const handleAnalyze = async () => {  if (!file) return;  setAnalyzing(true);  setError(null);  const reader = new FileReader();  reader.onloadend = async () => {    const base64Preview = reader.result;    setTimeout(async () => {      try {        const analysisResult = {          deepfake: 72,          nude: 12,          mental: 5,          overall: 64,        };        setResult(analysisResult);        await api.post("/detections", {          filename: file.name,          fileType: file.type,          preview: base64Preview,          result:            analysisResult.overall > 50              ? "Fake"              : "Real",          confidence:            analysisResult.overall,        });        console.log(          "Detection saved successfully"        );      } catch (err: any) {        console.error(err);        setError(          err?.message ||            "Failed to analyze media."        );      } finally {        setAnalyzing(false);      }    }, 3000);  };  reader.readAsDataURL(file);};
 
   const handleRemoveFile = () => {
     setFile(null)
+
     setResult(null)
+
+    setError(null)
+
     setAnalyzing(false)
   }
 
   const getFileIcon = () => {
     if (!file) return "📁"
-    if (file.type.startsWith("image")) return "🖼️"
-    if (file.type.startsWith("video")) return "🎬"
+
+    if (
+      file.type.startsWith("image")
+    )
+      return "🖼️"
+
+    if (
+      file.type.startsWith("video")
+    )
+      return "🎬"
+
     return "📄"
   }
 
@@ -92,20 +61,26 @@ export default function DetectionPage() {
 
         {/* HEADER */}
         <div className="mb-16">
+
           <div className="text-primary text-sm font-semibold tracking-widest uppercase mb-6">
             🎭 Deepfake Analysis Lab
           </div>
 
           <h1 className="text-5xl md:text-6xl font-extrabold mb-6">
-            Real vs Fake <br />
+            Real vs Fake
+            <br />
+
             <span className="bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
               Video Detector
             </span>
           </h1>
 
           <p className="text-muted-foreground max-w-2xl">
-            Upload any image or video to detect whether it's real or AI-generated.
+            Upload any image or video
+            to detect whether it's real
+            or AI-generated.
           </p>
+
         </div>
 
         {/* GRID */}
@@ -114,47 +89,90 @@ export default function DetectionPage() {
           {/* LEFT PANEL */}
           <div className="bg-card border border-border rounded-2xl p-10 backdrop-blur-xl shadow-card">
 
-            <UploadZone file={file} setFile={setFile} />
+            <UploadZone
+              file={file}
+              setFile={setFile}
+            />
 
             {file && (
               <div className="mt-4 flex items-center justify-between bg-background border border-border rounded-xl px-4 py-3 hover:border-primary/40 transition">
 
                 <div className="flex items-center gap-3 overflow-hidden">
+
                   <div className="w-10 h-10 rounded-md bg-muted flex items-center justify-center text-xl">
                     {getFileIcon()}
                   </div>
 
                   <div className="min-w-0">
+
                     <p className="text-sm font-semibold truncate">
                       {file.name}
                     </p>
 
                     <p className="text-xs text-muted-foreground">
-                      {(file.size / 1024 / 1024).toFixed(2)} MB •{" "}
-                      {file.type.split("/")[1]}
+                      {(
+                        file.size /
+                        1024 /
+                        1024
+                      ).toFixed(2)}
+                      {" MB • "}
+                      {
+                        file.type.split(
+                          "/"
+                        )[1]
+                      }
                     </p>
+
                   </div>
+
                 </div>
 
                 <button
-                  onClick={handleRemoveFile}
+                  onClick={
+                    handleRemoveFile
+                  }
                   className="text-muted-foreground hover:text-danger text-lg transition"
                 >
                   ✕
                 </button>
+
+              </div>
+            )}
+
+            {/* ERROR */}
+            {error && (
+              <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/10 p-4">
+
+                <p className="text-sm text-red-400">
+                  {error}
+                </p>
+
               </div>
             )}
 
             {/* ANALYZE BUTTON */}
             <button
               onClick={handleAnalyze}
-              disabled={!file || analyzing}
-              className="mt-6 w-full py-4 rounded-xl font-semibold 
-              bg-accent-gradient text-white
-              hover:scale-[1.02] hover:shadow-glow
-              transition disabled:opacity-50"
+              disabled={
+                !file || analyzing
+              }
+              className="
+                mt-6
+                w-full
+                py-4
+                rounded-xl
+                font-semibold
+                bg-accent-gradient
+                text-white
+                hover:scale-[1.02]
+                hover:shadow-glow
+                transition
+                disabled:opacity-50
+              "
             >
-              {analyzing ? "Analyzing..." : "🔍 Analyze for Deepfake"}
+              {analyzing
+                ? "Analyzing..."
+                : "🔍 Analyze for Deepfake"}
             </button>
 
           </div>
@@ -165,16 +183,25 @@ export default function DetectionPage() {
             {analyzing ? (
               <ProgressSteps />
             ) : result ? (
-              <DetectionResult result={result} />
+              <DetectionResult
+                result={result}
+              />
             ) : (
               <div className="text-center text-muted-foreground">
-                <div className="text-4xl mb-4">🎭</div>
+
+                <div className="text-4xl mb-4">
+                  🎭
+                </div>
+
                 <h3 className="text-lg text-foreground mb-2">
                   Awaiting Upload
                 </h3>
+
                 <p className="text-sm max-w-xs">
-                  Upload a file to run deepfake detection.
+                  Upload a file to run
+                  deepfake detection.
                 </p>
+
               </div>
             )}
 
@@ -184,9 +211,13 @@ export default function DetectionPage() {
 
         {/* EXTRA SECTIONS */}
         <div className="mt-16 space-y-16">
+
           <WhatWeAnalyze />
+
           <DemoScenarios />
+
           <RecentDetections />
+
         </div>
 
       </div>
